@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ilusión de Fluidez vs Esfuerzo Deseable</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 20px;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f8f9fa;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+    
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      max-width: 900px;
+      width: 100%;
+    }
+    
+    h1 {
+      text-align: center;
+      color: #2c3e50;
+      margin-bottom: 30px;
+      font-size: 24px;
+    }
+    
+    .chart-container {
+      position: relative;
+      width: 100%;
+      height: 500px;
+    }
+    
+    svg {
+      width: 100%;
+      height: 100%;
+    }
+    
+    .point {
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .point circle {
+      transition: all 0.3s ease;
+    }
+    
+    .point:hover circle {
+      r: 12;
+      filter: drop-shadow(0 0 8px currentColor);
+    }
+    
+    .tooltip {
+      position: fixed;
+      background: white;
+      border: 2px solid #34495e;
+      border-radius: 8px;
+      padding: 15px;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      z-index: 1000;
+      max-width: 250px;
+      transform: translate(-50%, -120%);
+    }
+    
+    .tooltip.active {
+      opacity: 1;
+    }
+    
+    .tooltip h3 {
+      margin: 0 0 8px 0;
+      font-size: 16px;
+      color: #2c3e50;
+    }
+    
+    .tooltip p {
+      margin: 0;
+      font-size: 13px;
+      color: #555;
+      line-height: 1.4;
+    }
+    
+    .legend {
+      margin-top: 30px;
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      flex-wrap: wrap;
+    }
+    
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      color: #555;
+    }
+    
+    .legend-box {
+      width: 20px;
+      height: 20px;
+      border-radius: 4px;
+    }
+    
+    .note {
+      text-align: center;
+      font-size: 12px;
+      color: #7f8c8d;
+      font-style: italic;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Ilusión de Fluidez vs Esfuerzo Deseable</h1>
+    
+    <div class="chart-container">
+      <svg viewBox="0 0 800 500" id="chart">
+        <!-- Zonas de fondo -->
+        <rect x="450" y="300" width="270" height="170" fill="#ffebee" opacity="0.5" rx="10"/>
+        <text x="585" y="330" font-size="14" font-weight="bold" text-anchor="middle" fill="#c62828">
+          Ilusión de Fluidez
+        </text>
+        
+        <rect x="80" y="80" width="270" height="170" fill="#e8f5e9" opacity="0.5" rx="10"/>
+        <text x="215" y="110" font-size="14" font-weight="bold" text-anchor="middle" fill="#2e7d32">
+          Esfuerzo Deseable
+        </text>
+        
+        <!-- Ejes -->
+        <line x1="80" y1="450" x2="720" y2="450" stroke="#34495e" stroke-width="3"/>
+        <line x1="80" y1="450" x2="80" y2="50" stroke="#34495e" stroke-width="3"/>
+        
+        <!-- Flechas -->
+        <polygon points="720,450 710,445 710,455" fill="#34495e"/>
+        <polygon points="80,50 75,60 85,60" fill="#34495e"/>
+        
+        <!-- Etiquetas de ejes -->
+        <text x="400" y="485" font-size="14" text-anchor="middle" fill="#2c3e50" font-weight="600">
+          Sensación de fluidez / Facilidad percibida
+        </text>
+        <text x="30" y="250" font-size="14" text-anchor="middle" fill="#2c3e50" font-weight="600" transform="rotate(-90 30 250)">
+          Aprendizaje real / Retención a largo plazo
+        </text>
+        
+        <!-- Puntos interactivos -->
+        <g class="point" data-name="Releer y subrayar" data-desc="Ana pasa horas releyendo y subrayando. Se siente productiva y segura, pero en el examen descubre que memorizar páginas no es lo mismo que comprender conceptos." data-color="#e74c3c">
+          <circle cx="620" cy="380" r="10" fill="#e74c3c"/>
+        </g>
+        
+        <g class="point" data-name="Resúmenes bonitos" data-desc="Laura crea apuntes hermosos con letras bonitas y dibujos coloridos. Invierte mucho tiempo en el diseño, pero poco en procesar profundamente la información." data-color="#e67e22">
+          <circle cx="540" cy="330" r="10" fill="#e67e22"/>
+        </g>
+        
+        <g class="point" data-name="Autoevaluación" data-desc="Carlos se pone a prueba constantemente sin mirar sus apuntes. Es incómodo y frustrante, pero cuando llega el examen, domina los conceptos completamente." data-color="#27ae60">
+          <circle cx="180" cy="150" r="10" fill="#27ae60"/>
+        </g>
+        
+        <g class="point" data-name="Práctica distribuida" data-desc="Estudiar en sesiones espaciadas a lo largo del tiempo. Requiere planificación y disciplina, pero produce retención duradera." data-color="#16a085">
+          <circle cx="250" cy="130" r="10" fill="#16a085"/>
+        </g>
+        
+        <g class="point" data-name="Enseñar a o
