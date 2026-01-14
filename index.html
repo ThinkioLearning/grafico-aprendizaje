@@ -8,115 +8,87 @@
     body {
       margin: 0;
       padding: 20px;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-family: Arial, sans-serif;
       background: #f8f9fa;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
     }
     
     .container {
+      max-width: 800px;
+      margin: 0 auto;
       background: white;
-      padding: 30px;
-      border-radius: 15px;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-      max-width: 900px;
-      width: 100%;
+      padding: 20px;
+      border-radius: 10px;
     }
     
     h1 {
       text-align: center;
       color: #2c3e50;
-      margin-bottom: 30px;
-      font-size: 24px;
+      margin-bottom: 20px;
+      font-size: 22px;
     }
     
-    .chart-container {
+    .chart-wrapper {
       position: relative;
       width: 100%;
-      height: 500px;
+      max-width: 650px;
+      margin: 0 auto;
     }
     
     svg {
       width: 100%;
-      height: 100%;
+      height: auto;
+      display: block;
     }
     
     .point {
       cursor: pointer;
-      transition: all 0.3s ease;
     }
     
-    .point circle {
-      transition: all 0.3s ease;
-    }
-    
-    .point:hover circle {
-      r: 12;
-      filter: drop-shadow(0 0 8px currentColor);
-    }
-    
-    .tooltip {
-      position: fixed;
-      background: white;
-      border: 2px solid #34495e;
-      border-radius: 8px;
+    .info-box {
+      margin-top: 20px;
       padding: 15px;
-      pointer-events: none;
-      opacity: 0;
-      transition: opacity 0.3s ease;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-      z-index: 1000;
-      max-width: 250px;
-      transform: translate(-50%, -120%);
+      background: #f0f0f0;
+      border-radius: 8px;
+      min-height: 60px;
+      border-left: 4px solid #3498db;
     }
     
-    .tooltip.active {
-      opacity: 1;
+    .info-box h3 {
+      margin: 0 0 10px 0;
     }
     
-    .tooltip h3 {
-      margin: 0 0 8px 0;
-      font-size: 16px;
-      color: #2c3e50;
-    }
-    
-    .tooltip p {
+    .info-box p {
       margin: 0;
-      font-size: 13px;
-      color: #555;
-      line-height: 1.4;
+      line-height: 1.5;
+    }
+    
+    .info-box.empty {
+      color: #999;
+      font-style: italic;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
     
     .legend {
-      margin-top: 30px;
+      margin-top: 20px;
       display: flex;
       justify-content: center;
-      gap: 30px;
+      gap: 20px;
       flex-wrap: wrap;
+      font-size: 13px;
     }
     
     .legend-item {
       display: flex;
       align-items: center;
       gap: 8px;
-      font-size: 14px;
-      color: #555;
     }
     
     .legend-box {
       width: 20px;
       height: 20px;
-      border-radius: 4px;
-    }
-    
-    .note {
-      text-align: center;
-      font-size: 12px;
-      color: #7f8c8d;
-      font-style: italic;
-      margin-top: 20px;
+      border-radius: 3px;
     }
   </style>
 </head>
@@ -124,8 +96,8 @@
   <div class="container">
     <h1>Ilusión de Fluidez vs Esfuerzo Deseable</h1>
     
-    <div class="chart-container">
-      <svg viewBox="0 0 800 500" id="chart">
+    <div class="chart-wrapper">
+      <svg viewBox="0 0 800 500" xmlns="http://www.w3.org/2000/svg">
         <!-- Zonas de fondo -->
         <rect x="450" y="300" width="270" height="170" fill="#ffebee" opacity="0.5" rx="10"/>
         <text x="585" y="330" font-size="14" font-weight="bold" text-anchor="middle" fill="#c62828">
@@ -146,28 +118,73 @@
         <polygon points="80,50 75,60 85,60" fill="#34495e"/>
         
         <!-- Etiquetas de ejes -->
-        <text x="400" y="485" font-size="14" text-anchor="middle" fill="#2c3e50" font-weight="600">
+        <text x="400" y="485" font-size="13" text-anchor="middle" fill="#2c3e50" font-weight="600">
           Sensación de fluidez / Facilidad percibida
         </text>
-        <text x="30" y="250" font-size="14" text-anchor="middle" fill="#2c3e50" font-weight="600" transform="rotate(-90 30 250)">
-          Aprendizaje real / Retención a largo plazo
+        <text x="30" y="250" font-size="13" text-anchor="middle" fill="#2c3e50" font-weight="600" transform="rotate(-90 30 250)">
+          Aprendizaje real / Retención
         </text>
         
-        <!-- Puntos interactivos -->
-        <g class="point" data-name="Releer y subrayar" data-desc="Ana pasa horas releyendo y subrayando. Se siente productiva y segura, pero en el examen descubre que memorizar páginas no es lo mismo que comprender conceptos." data-color="#e74c3c">
-          <circle cx="620" cy="380" r="10" fill="#e74c3c"/>
-        </g>
+        <!-- Puntos clickeables -->
+        <circle class="point" cx="620" cy="380" r="12" fill="#e74c3c" 
+                onmouseover="showInfo('Releer y subrayar', 'Ana pasa horas releyendo y subrayando. Se siente productiva y segura, pero en el examen descubre que memorizar páginas no es lo mismo que comprender conceptos.', '#e74c3c')"
+                onmouseout="hideInfo()"
+                onclick="showInfo('Releer y subrayar', 'Ana pasa horas releyendo y subrayando. Se siente productiva y segura, pero en el examen descubre que memorizar páginas no es lo mismo que comprender conceptos.', '#e74c3c')"/>
         
-        <g class="point" data-name="Resúmenes bonitos" data-desc="Laura crea apuntes hermosos con letras bonitas y dibujos coloridos. Invierte mucho tiempo en el diseño, pero poco en procesar profundamente la información." data-color="#e67e22">
-          <circle cx="540" cy="330" r="10" fill="#e67e22"/>
-        </g>
+        <circle class="point" cx="540" cy="330" r="12" fill="#e67e22"
+                onmouseover="showInfo('Resúmenes bonitos', 'Laura crea apuntes hermosos con letras bonitas y dibujos coloridos. Invierte mucho tiempo en el diseño, pero poco en procesar profundamente la información.', '#e67e22')"
+                onmouseout="hideInfo()"
+                onclick="showInfo('Resúmenes bonitos', 'Laura crea apuntes hermosos con letras bonitas y dibujos coloridos. Invierte mucho tiempo en el diseño, pero poco en procesar profundamente la información.', '#e67e22')"/>
         
-        <g class="point" data-name="Autoevaluación" data-desc="Carlos se pone a prueba constantemente sin mirar sus apuntes. Es incómodo y frustrante, pero cuando llega el examen, domina los conceptos completamente." data-color="#27ae60">
-          <circle cx="180" cy="150" r="10" fill="#27ae60"/>
-        </g>
+        <circle class="point" cx="180" cy="150" r="12" fill="#27ae60"
+                onmouseover="showInfo('Autoevaluación', 'Carlos se pone a prueba constantemente sin mirar sus apuntes. Es incómodo y frustrante, pero cuando llega el examen, domina los conceptos completamente.', '#27ae60')"
+                onmouseout="hideInfo()"
+                onclick="showInfo('Autoevaluación', 'Carlos se pone a prueba constantemente sin mirar sus apuntes. Es incómodo y frustrante, pero cuando llega el examen, domina los conceptos completamente.', '#27ae60')"/>
         
-        <g class="point" data-name="Práctica distribuida" data-desc="Estudiar en sesiones espaciadas a lo largo del tiempo. Requiere planificación y disciplina, pero produce retención duradera." data-color="#16a085">
-          <circle cx="250" cy="130" r="10" fill="#16a085"/>
-        </g>
+        <circle class="point" cx="250" cy="130" r="12" fill="#16a085"
+                onmouseover="showInfo('Práctica distribuida', 'Estudiar en sesiones espaciadas a lo largo del tiempo. Requiere planificación y disciplina, pero produce retención duradera.', '#16a085')"
+                onmouseout="hideInfo()"
+                onclick="showInfo('Práctica distribuida', 'Estudiar en sesiones espaciadas a lo largo del tiempo. Requiere planificación y disciplina, pero produce retención duradera.', '#16a085')"/>
         
-        <g class="point" data-name="Enseñar a o
+        <circle class="point" cx="300" cy="110" r="12" fill="#2ecc71"
+                onmouseover="showInfo('Enseñar a otros', 'Explicar conceptos a compañeros obliga a organizar el conocimiento y detectar lagunas. Es demandante pero extremadamente efectivo.', '#2ecc71')"
+                onmouseout="hideInfo()"
+                onclick="showInfo('Enseñar a otros', 'Explicar conceptos a compañeros obliga a organizar el conocimiento y detectar lagunas. Es demandante pero extremadamente efectivo.', '#2ecc71')"/>
+      </svg>
+    </div>
+    
+    <div class="info-box empty" id="infoBox">
+      Pasa el cursor sobre los puntos de colores para ver la información
+    </div>
+    
+    <div class="legend">
+      <div class="legend-item">
+        <div class="legend-box" style="background: #ffebee; border: 2px solid #c62828;"></div>
+        <span><strong>Ilusión de Fluidez:</strong> Alta facilidad, bajo aprendizaje</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-box" style="background: #e8f5e9; border: 2px solid #2e7d32;"></div>
+        <span><strong>Esfuerzo Deseable:</strong> Baja facilidad, alto aprendizaje</span>
+      </div>
+    </div>
+    
+    <p style="text-align: center; color: #7f8c8d; font-size: 11px; margin-top: 20px; font-style: italic;">
+      Basado en investigación de Bjork & Bjork sobre "Desirable Difficulties"
+    </p>
+  </div>
+  
+  <script>
+    function showInfo(title, desc, color) {
+      const box = document.getElementById('infoBox');
+      box.classList.remove('empty');
+      box.innerHTML = '<h3 style="color: ' + color + '">' + title + '</h3><p>' + desc + '</p>';
+    }
+    
+    function hideInfo() {
+      const box = document.getElementById('infoBox');
+      box.classList.add('empty');
+      box.innerHTML = 'Pasa el cursor sobre los puntos de colores para ver la información';
+    }
+  </script>
+</body>
+</html>
